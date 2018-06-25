@@ -1,6 +1,6 @@
 {
   "name": "trailpack-sequelize",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Sequelize.js Trailpack http://sequelizejs.com",
   "homepage": "https://github.com/jaumard/trailpack-sequelize",
   "author": {
@@ -22,6 +22,7 @@
     "test"
   ],
   "dependencies": {
+    "continuation-local-storage": "^3.2.x",
     "joi": "^10.1.0",
     "lodash": "^4.17.3",
     "sequelize": "^4.x",
