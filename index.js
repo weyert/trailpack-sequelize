@@ -89,23 +89,39 @@ module.exports = class SequelizeTrailpack extends Trailpack {
     )
   }
 
-  migrate() {
+  async checkRequiredExtensions(extensions = []) {
+    const mappedPromises = _.map(this.connections, connection => {
+      const {
+        dialect
+      } = connection.options
+      if (dialect !== 'postgres') return null
+      return this.app.services.SchemaMigrationService.installExtensions(extensions, connection)
+    })
+
+    const installedExtensions = await Promise.all(mappedPromises)
+    this.app.log.info('TrailpackSequelize.checkRequiredExtensions() The following extensions have been installed: ', installedExtensions)
+    return installedExtensions
+  }
+
+  async migrate() {
     const SchemaMigrationService = this.app.services.SchemaMigrationService
     const database = this.app.config.database
 
-    if (database.models.migrate == 'none') return
+    if (database.models.migrate == 'none') {
+      return
+    }
 
-    return Promise.all(
-      _.map(this.connections, connection => {
+    const installedExtensions = await this.checkRequiredExtensions(database.extensions)
 
-        if (database.models.migrate == 'drop') {
-          return SchemaMigrationService.dropDB(connection)
-        }
-        else if (database.models.migrate == 'alter') {
-          return SchemaMigrationService.alterDB(connection)
-        }
-      })
-    )
+    const mappedPromises = _.map(this.connections, connection => {
+      if (database.models.migrate == 'drop') {
+        return SchemaMigrationService.dropDB(connection)
+      } else if (database.models.migrate == 'alter') {
+        return SchemaMigrationService.alterDB(connection)
+      }
+    })
+
+    return Promise.all(mappedPromises)
   }
 
   constructor(app) {
@@ -116,4 +132,3 @@ module.exports = class SequelizeTrailpack extends Trailpack {
     })
   }
 }
-
