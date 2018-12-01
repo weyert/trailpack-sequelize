@@ -70,7 +70,7 @@ module.exports = class SchemaMigrationService extends Service {
       raw: true
     })
     if (metadata.rowCount === 0) {
-      this.app.log.debug('SchemaMigrationService.installExtension() Missing ${extension} extension. Attempting to install')
+      this.app.log.debug(`SchemaMigrationService.installExtension() Missing ${extension} extension. Attempting to install`)
       try {
         const [installedExtensions, metadata] = await connection.query(`CREATE EXTENSION ${extension}`, {
           raw: true
@@ -79,11 +79,11 @@ module.exports = class SchemaMigrationService extends Service {
         return true
 
       } catch (error) {
-        athis.pp.log.error('SchemaMigrationService.installExtension() Failed to install ${extension} extension: ', error)
+        this.app.log.error(`SchemaMigrationService.installExtension() Failed to install ${extension} extension: `, error)
         return false
       }
     } else {
-      this.app.log.debug('SchemaMigrationService.installExtension() ${extension} is already installed')
+      this.app.log.debug(`SchemaMigrationService.installExtension() ${extension} is already installed`)
       return false
     }
   }
