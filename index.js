@@ -116,7 +116,8 @@ module.exports = class SequelizeTrailpack extends Trailpack {
     const mappedPromises = _.map(this.connections, connection => {
       if (database.models.migrate == 'drop') {
         return SchemaMigrationService.dropDB(connection)
-      } else if (database.models.migrate == 'alter') {
+      }
+      else if (database.models.migrate == 'alter') {
         return SchemaMigrationService.alterDB(connection)
       }
     })

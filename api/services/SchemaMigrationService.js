@@ -78,11 +78,13 @@ module.exports = class SchemaMigrationService extends Service {
         this.app.log.error('SchemaMigrationService.installExtension() Result: ', installedExtensions)
         return true
 
-      } catch (error) {
+      }
+      catch (error) {
         this.app.log.error(`SchemaMigrationService.installExtension() Failed to install ${extension} extension: `, error)
         return false
       }
-    } else {
+    }
+    else {
       this.app.log.debug(`SchemaMigrationService.installExtension() ${extension} is already installed`)
       return false
     }
@@ -97,8 +99,8 @@ module.exports = class SchemaMigrationService extends Service {
       return []
     }
 
-    let installedExtensions = []
-    for (var i = 0; i < extensions.length; i++) {
+    const installedExtensions = []
+    for (let i = 0; i < extensions.length; i++) {
       const extensionName = extensions[i]
       const result = await this.installExtension(extensionName, connection)
       if (result) {
